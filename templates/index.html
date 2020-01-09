@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<button onclick="on_button_clicked()">Turn On</button>
+<button onclick="off_button_clicked()">Turn Off</button>
+
+<div id="log" style="height:120px;width:240px;border:1px solid #ccc;font:16px/26px Georgia, Garamond, Serif;overflow:auto;">
+    Log messages show up here.
+</div>
+
+<script>
+    function on_button_clicked() {
+        console.log("On button clicked.");
+        xhr = new XMLHttpRequest()
+        xhr.open('GET', '{{ url_for('on') }}');
+        xhr.onload = update_log_div
+        xhr.send();
+    }
+
+    function off_button_clicked() {
+        console.log("Off button clicked");
+        xhr = new XMLHttpRequest()
+        xhr.open('GET', '{{ url_for('off') }}');
+        xhr.onload = update_log_div
+        xhr.send();
+    }
+
+    function update_log_div() {
+        log_box = document.getElementById("log");
+        xhr = new XMLHttpRequest();
+        xhr.open('GET', '{{ url_for('log') }}');
+        xhr.onload = function() {
+            log_box.innerHTML = xhr.responseText; 
+            var objDiv = document.getElementById("log");
+            objDiv.scrollTop = objDiv.scrollHeight;
+        }
+        xhr.send()
+    }
+
+    document.addEventListener("DOMContentLoaded", update_log_div);
+
+</script>
